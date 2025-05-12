@@ -1,93 +1,77 @@
-This project implements a license plate detection and recognition system using Python and OpenCV in the Google Colab environment. It supports real-time video processing (via uploaded video files) or still images, detecting license plates in frames and extracting text from them using EasyOCR.
 
-Workflow Overview
-Here's a step-by-step breakdown of how the code works:
+# 🚗 Automatic License Plate Detection and Recognition
 
-1. Setup and Initialization
-Libraries Used:
+This project detects and recognizes license plates from images and videos using **YOLO-free contour detection** for localization and **EasyOCR** for text recognition. Designed for real-time or batch processing, it runs seamlessly in environments like **Google Colab** or **locally** on your machine.
 
-cv2 (OpenCV): Image and video processing
+---
 
-numpy: Array and image data handling
+## 📸 Features
 
-easyocr: Optical Character Recognition (OCR)
+* 📷 **Supports both image and video input**
+* 🎯 **License plate localization** using OpenCV contour detection (no YOLO needed)
+* 🔤 **Text recognition** using EasyOCR
+* ⏱️ **Real-time video processing** with optional frame skipping for better performance
+* 🧾 **Annotated output** with bounding boxes and overlaid license plate numbers
 
-imutils: Helpful utilities for OpenCV
+---
 
-re: Regular expressions for cleaning text
+## 🛠️ Tech Stack
 
-google.colab: For file upload and display in Colab
+* Python 3.x
+* OpenCV
+* EasyOCR
+* NumPy
+* imutils
+* Google Colab *(optional for cloud execution)*
 
-OCR Reader Initialization:
+---
 
-python
-Copy
-Edit
-reader = easyocr.Reader(['en'], gpu=True)
-Initializes EasyOCR for English text using GPU if available.
+## 🧑‍💻 How to Run
 
-2. License Plate Detection (detect_plate)
-Converts the input image to grayscale.
+### ✅ Google Colab (Recommended)
 
-Applies bilateral filtering to reduce noise while preserving edges.
+1. Open the provided Colab notebook.
+2. Upload your **image** or **video** when prompted.
+3. The system will display and provide a **download link** for the annotated output.
 
-Uses Canny edge detection to highlight the outlines.
+### 🖥️ Local Setup
 
-Finds and sorts contours, looking for rectangular (4-point) shapes that resemble license plates.
+1. Ensure **Python 3.x** is installed.
+2. Install required dependencies:
 
-3. Text Recognition from Plate (recognize_plate_text)
-Masks and crops the detected license plate area.
+```bash
+pip install opencv-python easyocr imutils numpy
+```
 
-Uses EasyOCR to read the text from the cropped image.
+3. *(Optional: for GPU acceleration with EasyOCR)*
 
-Cleans the text output to remove unwanted characters using regular expressions.
+```bash
+pip install torch torchvision torchaudio
+```
 
-4. Image Processing (process_image)
-Resizes images for consistency.
+4. Run the script:
 
-Calls detect_plate() and recognize_plate_text() in sequence.
+```bash
+python main.py
+```
 
-Draws contours around the detected plate and overlays the recognized text.
+---
 
-Returns the processed image, recognized plate text, and cropped plate region.
+## 🧾 Output
 
-5. Video/Image Upload & Processing (process_video)
-Google Colab Specific:
+* Detected license plates are highlighted with **bounding boxes**.
+* **Recognized text** (license number) is overlaid directly on the image or video frame.
 
-Accepts file uploads (image or video).
+---
 
-Processes video frame by frame, applying plate detection and recognition on every 5th frame to optimize speed.
+## 🖼️ Sample Output
 
-Annotates the video with recognized plate text.
+```
+[✓] Detected Plate: MH12AB1234
+[✓] Saved output: annotated_video.mp4
+```
 
-Writes and saves the annotated video to disk.
+> Output is saved as an image or video with license plate annotations.
 
-Converts output to MP4 using ffmpeg-python for compatibility and allows users to download the result.
+---
 
-For Images:
-
-Directly applies the process_image() function.
-
-Displays and saves annotated images.
-
-Allows downloading processed image.
-
-6. Main Function (main)
-Acts as the entry point when the script is executed.
-
-Runs process_video() which handles both images and videos via file upload.
-End-to-End Workflow
-
-Input: Image or Video Upload via Colab
-    ↓
-Preprocess Image (resize, grayscale, blur)
-    ↓
-Detect License Plate Contour (using Canny + Contours)
-    ↓
-Crop Plate Area
-    ↓
-OCR on Cropped Plate (EasyOCR)
-    ↓
-Draw Contour + Overlay Text
-    ↓
-Display/Save/Download Result
